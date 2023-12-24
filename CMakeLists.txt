@@ -77,6 +77,7 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         -Wno-unused-parameter
         -Wno-missing-field-initializers
     )
+    target_link_options(${LOCAL_PROJECT_NAME} PRIVATE -static-libstdc++)
 
     else()
       target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${GCC_WARNINGS})
