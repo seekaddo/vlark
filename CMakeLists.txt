@@ -65,6 +65,24 @@ add_executable(${LOCAL_PROJECT_NAME})
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_sources(${LOCAL_PROJECT_NAME} PRIVATE ${SOURCES} ${HEADERS})
 target_compile_definitions(${LOCAL_PROJECT_NAME} PRIVATE ${DEFINES})
-target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${GCC_WARNINGS})
+
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -Wno-sign-compare
+        -Wno-unused-function
+        -Wno-unused-parameter
+        -Wno-missing-field-initializers
+    )
+
+    else()
+      target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${GCC_WARNINGS})
+    endif()
+endif()
+
+
 
 set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
