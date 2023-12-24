@@ -395,10 +395,8 @@ namespace vlark
             break;
         case token_type::Left_Bracket:
             return token_type::Right_Bracket;
-            break;
         case token_type::Left_Paren:
             return token_type::Right_Paren;
-            break;
         default:
             return token_type::Invalid;
         }
