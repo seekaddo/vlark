@@ -2,15 +2,17 @@ cmake_minimum_required(VERSION 3.12)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-    set(CMAKE_SYSTEM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
-    set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
-endif()
+# if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+#     set(CMAKE_SYSTEM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
+#     set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
+# endif()
 
 # Make timestamps of extracted files from FetchContent the time of extraction
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
 endif()
+
+option(WITH_TESTS "Build unit tests (requires internet connection)" ON)
 
 # Project variables
 set(LOCAL_PROJECT_NAME        "vlark")
@@ -105,6 +107,11 @@ else()
     )
 endif()
 
-
+if(WITH_TESTS)
+    enable_testing()
+    add_subdirectory(gtest)
+    add_subdirectory(test)
+    include(GoogleTest)
+endif()
 
 set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
