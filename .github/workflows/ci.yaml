@@ -120,5 +120,5 @@ jobs:
         CXX: clang++-13
         _CMAKE_TOOLCHAIN_PREFIX: llvm-
       run: |
-        cmake -T Clang
-        cmake --build . -j $Env:NUMBER_OF_PROCESSORS
+        cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --config Release -j $Env:NUMBER_OF_PROCESSORS
