@@ -28,10 +28,10 @@ jobs:
     - name: build
       run: |
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
-        sudo apt-get install -y clang-13
+        sudo apt-get install -y clang++-13
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang-13 ${{ matrix.target }} ..
+        cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ..
         cmake --build . -j$(nproc)
     # - name: test
     #   run: |

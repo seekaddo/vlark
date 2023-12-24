@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
+
 # Project variables
 set(LOCAL_PROJECT_NAME        "vlark")
 set(LOCAL_PROJECT_VERSION     "0.3.0")
@@ -66,6 +67,8 @@ target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_
 target_sources(${LOCAL_PROJECT_NAME} PRIVATE ${SOURCES} ${HEADERS})
 target_compile_definitions(${LOCAL_PROJECT_NAME} PRIVATE ${DEFINES})
 
+target_compile_features(${LOCAL_PROJECT_NAME} PRIVATE cxx_std_20)
+
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -76,9 +79,9 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         -Wno-unused-function
         -Wno-unused-parameter
         -Wno-missing-field-initializers
-        -std=c++20 -stdlib=libc++
+        #-std=c++20 -stdlib=libc++
     )
-    target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE -stdlib=libc++ -lc++abi)
+    #target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE -stdlib=libc++ -lc++abi)
 
     else()
       target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${GCC_WARNINGS})
