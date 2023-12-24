@@ -19,16 +19,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: install-build-deps
-      run: sudo apt update && sudo apt-get install -y clang++-13
+      run: sudo apt update && sudo apt-get install -y clang-13
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1
     - name: build
       run: |
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
-        sudo apt-get install -y clang++-13
+        sudo apt-get install -y clang-13
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ${{ matrix.target }} ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang-13 ${{ matrix.target }} ..
         cmake --build . -j$(nproc)
     # - name: test
     #   run: |
