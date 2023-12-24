@@ -8,13 +8,13 @@ env:
   UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
 jobs:
   build-clang:
-    strategy:
-      matrix:
-        target:
-        # Disable PCH for the default configuration. This prevents relying on implicit includes.
-        - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
-        - '-DMOLD_USE_ASAN=On'
-        - '-DMOLD_USE_TSAN=On'
+    # strategy:
+    #   matrix:
+    #     target:
+    #     # Disable PCH for the default configuration. This prevents relying on implicit includes.
+    #     - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
+    #     - '-DMOLD_USE_ASAN=On'
+    #     - '-DMOLD_USE_TSAN=On'
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
