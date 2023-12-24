@@ -101,7 +101,7 @@ jobs:
         cmake ${{ matrix.target }} ..
         cmake --build . -j$(sysctl -n hw.physicalcpu)
 
-build-windows:
+  build-windows:
   runs-on: windows-latest
   steps:
     - uses: actions/checkout@v3
@@ -122,4 +122,3 @@ build-windows:
       run: |
         cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
         cmake --build . --config Release -j $Env:NUMBER_OF_PROCESSORS
-
