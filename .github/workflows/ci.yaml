@@ -111,14 +111,21 @@ jobs:
         version: 13
         platform: x64
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build
-    - name: Build
+      run: cmake -E make_directory $ { {runner.workspace}}/build
+    - name: Configure CMake
       shell: bash
-      working-directory: ${{runner.workspace}}/build
+      working-directory: $ { {runner.workspace}}/build
       env:
         CC: clang-13
         CXX: clang++-13
         _CMAKE_TOOLCHAIN_PREFIX: llvm-
-      run: |
-        cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
-        cmake --build . --config Release -j $Env:NUMBER_OF_PROCESSORS
+      run: cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      working-directory: $ { {runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config Release
+    # - name: Test
+    #   working-directory: $ { {runner.workspace}}/build
+    #   shell: bash
+    #   run: ctest -C Release
+
