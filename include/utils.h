@@ -51,7 +51,7 @@ namespace vlark
         {
         }
 
-        ssize_t indent() const { return std::find_if_not(text.begin(), text.end(), &isspace) - text.begin(); }
+        // ssize_t indent() const { return std::find_if_not(text.begin(), text.end(), &isspace) - text.begin(); }
     };
 
     using lineno_t = int32_t;
