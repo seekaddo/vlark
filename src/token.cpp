@@ -283,8 +283,6 @@ namespace vlark
             return "subtype";
         case token_type::Then:
             return "then";
-        case token_type::Then:
-            return "then";
         case token_type::To:
             return "to";
         case token_type::Transport:
