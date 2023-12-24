@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 3.12)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+    set(CMAKE_SYSTEM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
+    set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION 10.0.18362.0 CACHE STRING INTERNAL FORCE)
+endif()
 
+# Make timestamps of extracted files from FetchContent the time of extraction
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
 
 # Project variables
 set(LOCAL_PROJECT_NAME        "vlark")
@@ -84,6 +92,17 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     else()
       target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${GCC_WARNINGS})
     endif()
+else()
+    target_compile_options(
+        ${LOCAL_PROJECT_NAME}
+        PRIVATE
+            /wd4146
+            /wd4244
+            /wd4251
+            /wd4267
+            /WX
+            /D_CRT_SECURE_NO_WARNINGS
+    )
 endif()
 
 
