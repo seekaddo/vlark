@@ -5,10 +5,7 @@
 class TokenTestFixture : public ::testing::Test
 {
 public:
-    // vlark::token token; // Create an instance of the Parser class for testing
     std::size_t name_len = 0;
-
-protected:
 };
 
 TEST_F(TokenTestFixture, TokenGetNameLTest)
