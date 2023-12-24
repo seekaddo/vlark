@@ -102,30 +102,27 @@ jobs:
         cmake --build . -j$(sysctl -n hw.physicalcpu)
 
   build-windows:
-    runs-on: windows-latest
+    name: "Build - Windows"
+    runs-on: windows-2022
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Clang 13
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: 13
-        platform: x64
-    - name: Create Build Environment
-      run: cmake -E make_directory $ { {runner.workspace}}/build
-    - name: Configure CMake
-      shell: bash
-      working-directory: $ { {runner.workspace}}/build
-      env:
-        CC: clang-13
-        CXX: clang++-13
-        _CMAKE_TOOLCHAIN_PREFIX: llvm-
-      run: cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
-    - name: Build
-      working-directory: $ { {runner.workspace}}/build
-      shell: bash
-      run: cmake --build . --config Release
-    # - name: Test
-    #   working-directory: $ { {runner.workspace}}/build
-    #   shell: bash
-    #   run: ctest -C Release
+      - uses: ilammy/msvc-dev-cmd@v1
 
+      - name: Install CMake
+        uses: lukka/get-cmake@v3.27.6
+
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - uses: actions/checkout@v4
+
+      - name: configure
+        run: cmake -S . -B build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      # Build everything else fast
+      - name: build
+        working-directory: build
+        run: cmake --build . --parallel $(nproc)
+        env:
+          SCCACHE_GHA_ENABLED: "true"
