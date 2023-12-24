@@ -1,0 +1,111 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+env:
+  UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+jobs:
+  build-clang:
+    strategy:
+      matrix:
+        target:
+        # Disable PCH for the default configuration. This prevents relying on implicit includes.
+        - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
+        - '-DMOLD_USE_ASAN=On'
+        - '-DMOLD_USE_TSAN=On'
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: rui314/setup-mold@v1
+    - name: install-build-deps
+      run: sudo sudo apt update && sudo apt-get install -y cmake gcc g++ g++-12
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+    - name: build
+      run: |
+        echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
+        sudo apt-get install -y clang++-13
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ${{ matrix.target }} ..
+        cmake --build . -j$(nproc)
+    # - name: test
+    #   run: |
+    #     cd build
+    #     ctest -j$(nproc)
+    # - name: archive test results
+    #   uses: actions/upload-artifact@v3
+    #   if: failure()
+    #   with:
+    #     name: test-results-clang
+    #     path: |
+    #       build
+    #       !build/CMakeFiles
+
+  build-gcc:
+    runs-on: ubuntu-20.04
+    container: gcc:latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: install-build-deps
+      shell: bash
+      run: |
+        # Install cross toolchains
+        apt-get update
+        apt-get install -y cmake gcc g++ g++-12
+  
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+    - name: build
+      run: |
+        echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build . -j$(nproc)
+    # - name: test
+    #   run: |
+    #     cd build
+    #     ctest -j$(nproc)
+    # - name: archive test results
+    #   uses: actions/upload-artifact@v3
+    #   if: failure()
+    #   with:
+    #     name: test-results-gcc
+    #     path: |
+    #       build
+    #       !build/CMakeFiles
+
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        target:
+        # Disable PCH for the default configuration. This prevents relying on implicit includes.
+        - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
+        - '-DMOLD_USE_ASAN=On'
+    steps:
+    - uses: actions/checkout@v3
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+    - name: build
+      run: |
+        echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
+        cmake --version
+        mkdir build
+        cd build
+        cmake ${{ matrix.target }} ..
+        cmake --build . -j$(sysctl -n hw.physicalcpu)
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: build
+      run: |
+        mkdir build
+        cd build
+        cmake -T clangcl ..
+        cmake --build . -j $Env:NUMBER_OF_PROCESSORS
