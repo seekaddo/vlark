@@ -82,12 +82,12 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    strategy:
-      # matrix:
-      #   target:
-      #   # Disable PCH for the default configuration. This prevents relying on implicit includes.
-      #   - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
-      #   - '-DMOLD_USE_ASAN=On'
+    # strategy:
+    #   matrix:
+    #     target:
+    #     # Disable PCH for the default configuration. This prevents relying on implicit includes.
+    #     - '-DCMAKE_DISABLE_PRECOMPILE_HEADERS=On'
+    #     - '-DMOLD_USE_ASAN=On'
     steps:
     - uses: actions/checkout@v3
     - name: ccache
