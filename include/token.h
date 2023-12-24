@@ -347,6 +347,9 @@ namespace vlark
         token_type tok_type;
     };
 
+    token_type close_paren_type(token_type ttype);
+    std::size_t get_name_len(const std::string &text);
+
 } // namespace vhdlsem
 
 #endif // TOKEN_H
