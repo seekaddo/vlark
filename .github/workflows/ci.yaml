@@ -102,23 +102,23 @@ jobs:
         cmake --build . -j$(sysctl -n hw.physicalcpu)
 
   build-windows:
-  runs-on: windows-latest
-  steps:
-    - uses: actions/checkout@v3
-    - name: Install Clang 13
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: 13
-        platform: x64
-    - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build
-    - name: Build
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      env:
-        CC: clang-13
-        CXX: clang++-13
-        _CMAKE_TOOLCHAIN_PREFIX: llvm-
-      run: |
-        cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
-        cmake --build . --config Release -j $Env:NUMBER_OF_PROCESSORS
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Clang 13
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: 13
+          platform: x64
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+      - name: Build
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        env:
+          CC: clang-13
+          CXX: clang++-13
+          _CMAKE_TOOLCHAIN_PREFIX: llvm-
+        run: |
+          cmake -T Clang $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release -j $Env:NUMBER_OF_PROCESSORS
