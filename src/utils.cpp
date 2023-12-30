@@ -26,9 +26,9 @@ namespace vlark
     //-----------------------------------------------------------------------
     //  load: extract line-by-line file content
     //
-    bool sourceBuffer::load(std::string const &filename)
+    bool sourceBuffer::load(std::string const &fname)
     {
-        std::ifstream in{filename};
+        std::ifstream in{fname};
         if (!in.is_open())
         {
             return false;

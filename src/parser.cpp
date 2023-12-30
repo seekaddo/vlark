@@ -23,14 +23,8 @@ namespace vlark
 
     ast parser::parse(const std::string_view filepath)
     {
-        vlark::sourceBuffer sbufferFile;
-
-        auto status = sbufferFile.load(std::string(filepath));
-
-        if (!status)
-        {
-            return ast();
-        }
+        std::string fpath(filepath);
+        vlark::sourceBuffer sbufferFile(fpath);
 
         int count = 0;
         for (auto &line : sbufferFile.get_lines())

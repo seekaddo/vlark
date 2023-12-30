@@ -38,11 +38,11 @@ namespace vlark
         enum class category
         {
             empty,
-            raw,
             comment,      // --
             multii_com_s, // /**/
             multii_com,   // is part of the comments
             multi_com_e,
+            raw
         };
         category cat;
 
@@ -70,28 +70,6 @@ namespace vlark
         auto operator<=>(source_position const &) const = default;
 
         auto to_string() const -> std::string { return "(" + std::to_string(lineno) + "," + std::to_string(colno) + ")"; }
-    };
-
-    //
-    //  error: represents a user-readable error message
-    //
-    //-----------------------------------------------------------------------
-    //
-    struct error_entry
-    {
-        source_position where;
-        std::string msg;
-        bool internal = false;
-        bool fallback = false; // only emit this message if there was nothing better
-
-        error_entry(source_position w, std::string_view m, bool i = false, bool f = false)
-            : where{w}, msg{m}, internal{i}, fallback{f}
-        {
-        }
-
-        auto operator==(error_entry const &that) -> bool { return where == that.where && msg == that.msg; }
-
-        void print(auto &o, std::string const &file) const;
     };
 
     bool is_empty_line(std::string_view line);
@@ -240,19 +218,21 @@ Usage: vlark [flags] <input>
     class sourceBuffer
     {
         std::deque<source_line> lines{};
+        std::string filename;
 
         static const int max_line_len = 98'000;
+
+        bool load(std::string const &filename);
 
     public:
         //-----------------------------------------------------------------------
         //  Constructor (maybe default will be better)
         //
         //
-        sourceBuffer()
+        sourceBuffer(std::string &file) : filename(file)
         {
+            load(filename);
         }
-
-        bool load(std::string const &filename);
 
         std::deque<source_line> &get_lines()
         {
