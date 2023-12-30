@@ -229,7 +229,7 @@ Usage: vlark [flags] <input>
         //  Constructor (maybe default will be better)
         //
         //
-        sourceBuffer(std::string &file) : filename(file)
+        sourceBuffer(const std::string &file) : filename(file)
         {
             load(filename);
         }
