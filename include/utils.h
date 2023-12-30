@@ -23,6 +23,7 @@
 #include <vector>
 #include <unordered_map>
 #include <iomanip>
+#include <deque>
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -37,14 +38,13 @@ namespace vlark
         enum class category
         {
             empty,
-            preprocessor,
-            comment,
-            lib,
-            dunit,
+            raw,
+            comment,      // --
+            multii_com_s, // /* */
+            multii_com,   // is part of the comments /* */
+            multi_com_e,
         };
         category cat;
-
-        bool all_tokens_are_densely_spaced = true; // to be overridden in lexing if they're not
 
         source_line(std::string_view t = {}, category c = category::empty)
             : text{t}, cat{c}
@@ -55,7 +55,7 @@ namespace vlark
     };
 
     using lineno_t = int32_t;
-    using colno_t = int32_t; // not int16_t... it can be >90,000 char line
+    using colno_t = int32_t;
 
     struct source_position
     {
@@ -94,6 +94,8 @@ namespace vlark
         void print(auto &o, std::string const &file) const;
     };
 
+    bool is_empty_line(std::string_view line);
+
     inline constexpr std::string_view help_string = R"(
 Usage: vlark [flags] <input>
     Flags:
@@ -117,13 +119,13 @@ Usage: vlark [flags] <input>
         {
             if (args.empty())
             {
-                std::cout << "unknown args parsed "
+                std::cout << "unknown args parsed empty"
                           << "\n";
                 std::cout << help_string << "\n";
                 exit(EXIT_SUCCESS);
             }
 
-            for (const std::string_view arg : args)
+            for (auto &[arg, opt] : options)
             {
                 if (arg == "-h" || arg == "--help")
                 {
@@ -140,18 +142,16 @@ Usage: vlark [flags] <input>
                 else if (arg == "-f" || arg == "--file")
                 {
                     // Check if the option has values
-                    if (options["--file"].empty() || options["-f"].empty())
+                    if (opt.empty())
                     {
                         std::cerr << "Error: --file option requires one or more file names." << std::endl;
+                        // std::cerr << "given" << options["--file"][0] << "\n";
+                        std::cerr << "given 2" << options["-f"][0] << "\n";
                         return;
                     }
-
-                    // todo: fix this later to handle multiple files
-                    //  at the moment only 1 vhdl file can be processed at a time
-                    for (const std::string_view fn : options["--file"])
-                    {
-                        filename = fn;
-                        break;
+                    else
+                    { // support multiple files later
+                        filename = opt[0];
                     }
                 }
                 else
@@ -230,6 +230,49 @@ Usage: vlark [flags] <input>
         CmdLine &operator=(const CmdLine &) = delete;
     };
 
-} // namespace vhdlsem
+    //
+    //
+    //-----------------------------------------------------------------------
+    //
+    //  sourceBuffer: Source_buffer is an in-memory of the complete source file.
+    //  breaken down into lines
+    //-----------------------------------------------------------------------
+    //
+    class sourceBuffer
+    {
+        std::deque<source_line> lines;
+
+        static const int max_line_len = 98'000;
+
+    public:
+        //-----------------------------------------------------------------------
+        //  Constructor (maybe default will be better)
+        //
+        //
+        sourceBuffer() : lines{}
+        {
+        }
+
+        bool load(std::string const &filename);
+
+        std::deque<source_line> &get_lines()
+        {
+            return lines;
+        }
+
+        std::deque<source_line> const &get_lines() const
+        {
+            return lines;
+        }
+
+        //  No copying
+        //
+        sourceBuffer(sourceBuffer const &) = delete;
+        sourceBuffer &operator=(sourceBuffer const &) = delete;
+        sourceBuffer(sourceBuffer &&) = delete;
+        sourceBuffer &operator=(sourceBuffer &&) = delete;
+    };
+
+} // namespace vlark
 
 #endif
