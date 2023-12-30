@@ -27,12 +27,17 @@ namespace vlark
 
         auto status = sbufferFile.load(std::string(filepath));
 
-        /*         int count = 0;
-                for (auto &line : sbufferFile.get_lines())
-                {
-                    std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
-                    count++;
-                } */
+        if (!status)
+        {
+            return ast();
+        }
+
+        int count = 0;
+        for (auto &line : sbufferFile.get_lines())
+        {
+            std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
+            count++;
+        }
 
         // Implement the parsing logic here
         // This is just a placeholder

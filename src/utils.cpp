@@ -38,8 +38,8 @@ namespace vlark
 
         auto skip_space = [&](std::string_view v) -> size_t
         {
-            auto cl_in = std::find_if(v.begin(), v.end(), [](char ch)
-                                      { return !std::isspace(ch); });
+            auto cl_in = std::ranges::find_if(v.begin(), v.end(), [](char ch)
+                                              { return !std::isspace(ch); });
             return std::distance(v.begin(), cl_in);
         };
 
@@ -100,8 +100,8 @@ namespace vlark
 
     bool is_empty_line(std::string_view line)
     {
-        return std::all_of(line.begin(), line.end(), [](char c)
-                           { return std::isspace(c) || c == '\n'; });
+        return std::ranges::all_of(line.begin(), line.end(), [](char c)
+                                   { return std::isspace(c) || c == '\n'; });
     }
 
 } // namespace vlark

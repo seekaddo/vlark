@@ -40,8 +40,8 @@ namespace vlark
             empty,
             raw,
             comment,      // --
-            multii_com_s, // /* */
-            multii_com,   // is part of the comments /* */
+            multii_com_s, // /**/
+            multii_com,   // is part of the comments
             multi_com_e,
         };
         category cat;
@@ -145,7 +145,6 @@ Usage: vlark [flags] <input>
                     if (opt.empty())
                     {
                         std::cerr << "Error: --file option requires one or more file names." << std::endl;
-                        // std::cerr << "given" << options["--file"][0] << "\n";
                         std::cerr << "given 2" << options["-f"][0] << "\n";
                         return;
                     }
@@ -240,7 +239,7 @@ Usage: vlark [flags] <input>
     //
     class sourceBuffer
     {
-        std::deque<source_line> lines;
+        std::deque<source_line> lines{};
 
         static const int max_line_len = 98'000;
 
@@ -249,7 +248,7 @@ Usage: vlark [flags] <input>
         //  Constructor (maybe default will be better)
         //
         //
-        sourceBuffer() : lines{}
+        sourceBuffer()
         {
         }
 
