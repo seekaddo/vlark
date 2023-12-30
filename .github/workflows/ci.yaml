@@ -31,7 +31,7 @@ jobs:
         sudo apt-get install -y clang++-13
         mkdir build
         cd build
-        cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ..
+        cmake -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ..
         cmake --build . -j$(nproc)
     - name: test
       run: |
@@ -65,7 +65,7 @@ jobs:
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release ..
         cmake --build . -j$(nproc)
     - name: test
       run: |
@@ -98,7 +98,7 @@ jobs:
         cmake --version
         mkdir build
         cd build
-        cmake ${{ matrix.target }} ..
+        cmake  -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ..
         cmake --build . -j$(sysctl -n hw.physicalcpu)
 
   build-windows:
