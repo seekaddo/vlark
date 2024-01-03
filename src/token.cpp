@@ -311,33 +311,23 @@ void find_add_tokens(std::deque<token>& tokens, source_line& line, size_t lineno
             std::cerr << "Sorry, not implemented yet.\n";
             break;
 
-        case ':': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Colon)); break;
-        case '=': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Equal)); break;
-        case '.': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Dot)); break;
-        case ';':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Semi_Colon));
-            break;
-        case ',': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Comma)); break;
+        case ':': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Colon); break;
+        case '=': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Equal); break;
+        case '.': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Dot); break;
+        case ';': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Semi_Colon); break;
+        case ',': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Comma); break;
 
-        case '|': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Bar)); break;
-        case ')':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Paren));
-            break;
-        case '(':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Left_Paren));
-            break;
-        case '[':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Left_Bracket));
-            break;
-        case ']':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Bracket));
-            break;
+        case '|': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Bar); break;
+        case ')': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Paren); break;
+        case '(': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Left_Paren); break;
+        case '[': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Left_Bracket); break;
+        case ']': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Bracket); break;
         case '\'':
-            tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Bracket));
+            tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Right_Bracket);
             break;
-        case '+': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Plus)); break;
-        case '-': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Minus)); break;
-        case '^': tokens.emplace_back(token(carr.substr(lo, 1), token_position(lineno, lo), token_type::Caret)); break;
+        case '+': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Plus); break;
+        case '-': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Minus); break;
+        case '^': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Caret); break;
 
         default:
             if (('A' <= ch && ch <= 'Z') || (('a' <= ch && ch <= 'z')) || (ch == '_'))
