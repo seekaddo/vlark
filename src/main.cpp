@@ -12,7 +12,7 @@
 
 #include "parser.hpp"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     vlark::CmdLine cmdline(argc, argv);
 
@@ -32,5 +32,6 @@ int main(int argc, char *argv[])
     (void)astV;
 
     std::cout << "ok not working well here am I \n";
+
     return 0;
 }
