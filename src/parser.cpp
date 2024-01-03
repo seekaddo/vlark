@@ -14,31 +14,31 @@
 // All parse interface code
 //===========================================================================
 
-#include "ast.hpp"
 #include "parser.hpp"
+#include "ast.hpp"
 #include <ranges>
 
 namespace vlark
 {
 
-    ast parser::parse(const std::string_view filepath)
+ast parser::parse(const std::string_view filepath)
+{
+    std::string fpath(filepath);
+    vlark::sourceBuffer sbufferFile(fpath);
+
+    int count = 0;
+    for (auto& line : sbufferFile.get_lines())
     {
-        std::string fpath(filepath);
-        vlark::sourceBuffer sbufferFile(fpath);
-
-        int count = 0;
-        for (auto &line : sbufferFile.get_lines())
-        {
-            std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
-            count++;
-        }
-
-        // Implement the parsing logic here
-        // This is just a placeholder
-        std::cout << "Parsing code: " << filepath << std::endl;
-
-        // Return a placeholder ast for demonstration purposes
-        return ast();
+        std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
+        count++;
     }
+
+    // Implement the parsing logic here
+    // This is just a placeholder
+    std::cout << "Parsing code: " << filepath << std::endl;
+
+    // Return a placeholder ast for demonstration purposes
+    return ast();
+}
 
 } // namespace vlark
