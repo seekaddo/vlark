@@ -14,37 +14,37 @@
 // All parse interface code
 //===========================================================================
 
-#include "ast.hpp"
 #include "parser.hpp"
+#include "ast.hpp"
 #include <ranges>
 
 namespace vlark
 {
 
-    ast parser::parse(const std::string_view filepath)
+ast parser::parse(const std::string_view filepath)
+{
+    std::string fpath(filepath);
+    vlark::sourceBuffer sbufferFile(fpath);
+
+    int count = 0;
+    for (auto& line : sbufferFile.get_lines())
     {
-        vlark::sourceBuffer sbufferFile;
-
-        auto status = sbufferFile.load(std::string(filepath));
-
-        if (!status)
-        {
-            return ast();
-        }
-
-        int count = 0;
-        for (auto &line : sbufferFile.get_lines())
-        {
-            std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
-            count++;
-        }
-
-        // Implement the parsing logic here
-        // This is just a placeholder
-        std::cout << "Parsing code: " << filepath << std::endl;
-
-        // Return a placeholder ast for demonstration purposes
-        return ast();
+        std::cout << "Line " << count << ": [ " << static_cast<int>(line.cat) << " ]  " << line.text << std::endl;
+        count++;
     }
+
+    auto tokenList = tokenize_lines(sbufferFile);
+
+    // Implement the parsing logic here
+    // This is just a placeholder
+    std::cout << "Parsing code: " << filepath << std::endl;
+    std::cout << "--------tokens--------------- \n";
+    auto tk = tokenList[0];
+    std::cout << tk.to_string() << " -> " << token_tostr(tk.type()) << " line: " << tk.position().lineno
+              << " col: " << tk.position().colno << "\n";
+
+    // Return a placeholder ast for demonstration purposes
+    return ast();
+}
 
 } // namespace vlark

@@ -28,10 +28,10 @@ jobs:
     - name: build
       run: |
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
-        sudo apt-get install -y clang++-13
+        sudo apt-get install -y clang++-13 ninja-build
         mkdir build
         cd build
-        cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ..
+        cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++-13 ..
         cmake --build . -j$(nproc)
     - name: test
       run: |
@@ -56,7 +56,7 @@ jobs:
       run: |
         # Install cross toolchains
         apt-get update
-        apt-get install -y cmake gcc g++ g++-12
+        apt-get install -y cmake gcc g++ g++-12 ninja-build
   
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1
@@ -65,7 +65,7 @@ jobs:
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
         cmake --build . -j$(nproc)
     - name: test
       run: |
@@ -81,7 +81,7 @@ jobs:
     #       !build/CMakeFiles
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
     # strategy:
     #   matrix:
     #     target:
@@ -94,11 +94,12 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
     - name: build
       run: |
+        brew install ninja
         echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
         cmake --version
         mkdir build
         cd build
-        cmake ${{ matrix.target }} ..
+        cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
         cmake --build . -j$(sysctl -n hw.physicalcpu)
 
   build-windows:
