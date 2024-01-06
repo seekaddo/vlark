@@ -231,11 +231,26 @@ std::size_t get_name_len(const std::string& text)
                : text.size();
 }
 
+bool is_valid_identifier(std::string_view token)
+{
+    if (token.empty() || !std::isalpha(token[0]))
+    {
+        return false;
+    }
+
+    auto st = std::isdigit(token[0]) || token.starts_with('_');
+    return !st;
+}
+
 // This handles are reserved names and also identifiers
 // Identifiers are the last option checked here if all reserved names are exhausted
 //
 bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t lineno, size_t col_no)
 {
+    if (sbstr.empty())
+    {
+        return false;
+    }
 
     static const std::unordered_map<std::string_view, token_type> keyword_map = {
         {"use", token_type::Use},
@@ -265,6 +280,9 @@ bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t line
         {"variable", token_type::Variable},
         {"default", token_type::Default},
         {"parameter", token_type::Parameter},
+        {"and", token_type::And},
+        {"or", token_type::Or},
+        {"xor", token_type::Xor},
 
         // Add more keywords and token types as needed
     };
@@ -277,6 +295,12 @@ bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t line
     }
     else
     {
+        if (is_valid_identifier(sbstr))
+        {
+            tokens.emplace_back(sbstr, token_position(lineno, col_no), token_type::Identifier);
+
+            return true;
+        }
         std::cerr << "token not valid keyword: " << sbstr << " \n";
     }
 
@@ -289,7 +313,7 @@ void find_add_tokens(std::deque<token>& tokens, source_line& line, size_t lineno
     size_t ori_len = line.text.size();
     size_t lo = 0;
 
-    while ((ori_len > lo) && (carr[lo] != '\n'))
+    while ((ori_len > lo) && (carr[lo] != '\n') && (carr[lo] != '\r'))
     {
         /* code */
         char ch = carr[lo];
