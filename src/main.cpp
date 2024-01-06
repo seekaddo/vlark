@@ -31,7 +31,5 @@ int main(int argc, char* argv[])
     vlark::ast astV = parser.parse(cmdline.geet_filename());
     (void)astV;
 
-    std::cout << "ok not working well here am I \n";
-
     return 0;
 }

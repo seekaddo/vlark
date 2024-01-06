@@ -39,9 +39,13 @@ ast parser::parse(const std::string_view filepath)
     // This is just a placeholder
     std::cout << "Parsing code: " << filepath << std::endl;
     std::cout << "--------tokens--------------- \n";
-    auto tk = tokenList[0];
-    std::cout << tk.to_string() << " -> " << token_tostr(tk.type()) << " line: " << tk.position().lineno
-              << " col: " << tk.position().colno << "\n";
+
+    for (auto tk : tokenList)
+    {
+        std::cout << tk << "\n";
+        // std::cout << tk.as_string_view() << " -> " << token_tostr(tk.type()) << " line: " << tk.position().lineno <<
+        // " col: " << tk.position().colno << "\n";
+    }
 
     // Return a placeholder ast for demonstration purposes
     return ast();

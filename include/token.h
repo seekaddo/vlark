@@ -300,27 +300,21 @@ public:
     {
     }
 
-    std::string_view as_string_view() const
+    std::string as_string_view() const
     {
         assert(sv.data());
         return sv;
     }
 
-    operator std::string_view() const { return as_string_view(); }
+    operator std::string() const { return as_string_view(); }
 
-    bool operator==(token const& t) const { return operator std::string_view() == t.operator std::string_view(); }
+    bool operator==(token const& t) const { return operator std::string() == t.operator std::string(); }
 
-    bool operator==(std::string_view s) const { return s == this->operator std::string_view(); }
+    bool operator==(std::string_view s) const { return s == this->operator std::string(); }
 
-    std::string to_string() const { return std::string{sv}; }
+    std::string to_string() const { return sv; }
 
-    friend auto& operator<<(auto& o, token const& t) { return o << std::string_view(t); }
-
-    void position_col_shift(colno_t offset)
-    {
-        assert(pos.colno + offset > 0);
-        pos.colno += offset;
-    }
+    friend auto& operator<<(auto& o, token const& t) { return o << t.as_string_view(); }
 
     token_position position() const { return pos; }
 
@@ -330,16 +324,8 @@ public:
 
     void set_type(token_type l) { tok_type = l; }
 
-    auto remove_prefix_if(std::string_view prefix)
-    {
-        if (sv.size() > prefix.size() && sv.starts_with(prefix))
-        {
-            sv.remove_prefix(prefix.size());
-        }
-    }
-
 private:
-    std::string_view sv;
+    std::string sv;
     token_position pos;
     token_type tok_type;
 };
@@ -348,7 +334,7 @@ token_type close_paren_type(token_type ttype);
 std::size_t get_name_len(const std::string& text);
 std::deque<token> tokenize_lines(sourceBuffer& sbfile);
 
-std::string_view token_tostr(token_type token);
+std::string token_tostr(token_type token);
 
 } // namespace vlark
 

@@ -209,7 +209,7 @@ std::string _asstr(token_type Token)
     }
 }
 
-std::string_view token_tostr(token_type token)
+std::string token_tostr(token_type token)
 {
     return _asstr<std::string>(token);
 }
@@ -275,6 +275,8 @@ bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t line
         {"library", token_type::Library},
         {"out", token_type::Out},
         {"port", token_type::Port},
+        {"of", token_type::Of},
+        {"others", token_type::Others},
         {"package", token_type::Package},
         {"procedure", token_type::Procedure},
         {"process", token_type::Process},
@@ -318,11 +320,11 @@ void find_add_tokens(std::deque<token>& tokens, source_line& line, size_t lineno
     size_t ori_len = line.text.size();
     size_t lo = 0;
 
-    while ((ori_len > lo) && (carr[lo] != '\n') && (carr[lo] != '\r'))
+    while ((ori_len > lo) && (carr[lo] != '\n'))
     {
         /* code */
         char ch = carr[lo];
-        if (std::isspace(ch))
+        if (std::isspace(ch) || ch == '\r')
         {
             lo++;
             continue;
@@ -337,7 +339,7 @@ void find_add_tokens(std::deque<token>& tokens, source_line& line, size_t lineno
             case '7': case '8': case '9':
             // clang-format on
             // Handle numeric characters
-            std::cerr << "Sorry, not implemented yet.\n";
+            std::cerr << ch << " -> Sorry, Integers not implemented yet.\n";
             break;
 
         case ':': tokens.emplace_back(carr.substr(lo, 1), token_position(lineno, lo), token_type::Colon); break;
@@ -363,7 +365,7 @@ void find_add_tokens(std::deque<token>& tokens, source_line& line, size_t lineno
             {
                 // let extract the reserved keywords and identifiers
                 auto tk_len = get_name_len(&carr[lo]);
-                auto status = handle_names(tokens, carr.substr(lo, tk_len), lineno, lo + tk_len);
+                auto status = handle_names(tokens, carr.substr(lo, tk_len), lineno, lo);
                 lo += status ? tk_len - 1 : 0;
             }
             else
@@ -387,7 +389,7 @@ std::deque<token> tokenize_lines(sourceBuffer& sbfile)
         exit(EXIT_FAILURE);
     }
 
-    size_t count_line = 0;
+    size_t count_line = 1;
     for (auto& line : lines)
     {
         if (line.cat == source_line::category::raw)
