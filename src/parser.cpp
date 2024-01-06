@@ -33,9 +33,15 @@ ast parser::parse(const std::string_view filepath)
         count++;
     }
 
+    auto tokenList = tokenize_lines(sbufferFile);
+
     // Implement the parsing logic here
     // This is just a placeholder
     std::cout << "Parsing code: " << filepath << std::endl;
+    std::cout << "--------tokens--------------- \n";
+    auto tk = tokenList[0];
+    std::cout << tk.to_string() << " -> " << token_tostr(tk.type()) << " line: " << tk.position().lineno
+              << " col: " << tk.position().colno << "\n";
 
     // Return a placeholder ast for demonstration purposes
     return ast();

@@ -209,6 +209,11 @@ std::string _asstr(token_type Token)
     }
 }
 
+std::string_view token_tostr(token_type token)
+{
+    return _asstr<std::string>(token);
+}
+
 token_type close_paren_type(token_type ttype)
 {
     switch (ttype)

@@ -348,6 +348,8 @@ token_type close_paren_type(token_type ttype);
 std::size_t get_name_len(const std::string& text);
 std::deque<token> tokenize_lines(sourceBuffer& sbfile);
 
+std::string_view token_tostr(token_type token);
+
 } // namespace vlark
 
 #endif // TOKEN_H
