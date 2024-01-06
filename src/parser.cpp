@@ -38,7 +38,7 @@ ast parser::parse(const std::string_view filepath)
     // Implement the parsing logic here
     // This is just a placeholder
     std::cout << "Parsing code: " << filepath << std::endl;
-    std::cout << "--------tokens--------------- \n";
+    std::cout << "--------tokens-------------- \n";
 
     for (auto tk : tokenList)
     {

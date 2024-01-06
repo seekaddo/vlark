@@ -276,6 +276,7 @@ bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t line
         {"out", token_type::Out},
         {"port", token_type::Port},
         {"of", token_type::Of},
+        {"is", token_type::Is},
         {"others", token_type::Others},
         {"package", token_type::Package},
         {"procedure", token_type::Procedure},
@@ -290,7 +291,6 @@ bool handle_names(std::deque<token>& tokens, std::string_view sbstr, size_t line
         {"and", token_type::And},
         {"or", token_type::Or},
         {"xor", token_type::Xor},
-
         // Add more keywords and token types as needed
     };
 
